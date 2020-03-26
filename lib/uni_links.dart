@@ -19,6 +19,15 @@ Future<String> getInitialLink() async {
   return initialLink;
 }
 
+/// Returns a [Future], which completes to one of the following:
+///
+///   * the latest stored link (possibly null), on successful invocation;
+///   * a [PlatformException], if the invocation failed in the platform plugin.
+Future<String> getLatestLink() async {
+  final String latestLink = await _mChannel.invokeMethod('getlatestLink');
+  return latestLink;
+}
+
 /// A convenience method that returns the initially stored link
 /// as a new [Uri] object.
 ///
@@ -26,6 +35,17 @@ Future<String> getInitialLink() async {
 /// a [FormatException] is thrown.
 Future<Uri> getInitialUri() async {
   final String link = await getInitialLink();
+  if (link == null) return null;
+  return Uri.parse(link);
+}
+
+/// A convenience method that returns the latest stored link
+/// as a new [Uri] object.
+///
+/// If the link is not valid as a URI or URI reference,
+/// a [FormatException] is thrown.
+Future<Uri> getLatestUri() async {
+  final String link = await getLatestLink();
   if (link == null) return null;
   return Uri.parse(link);
 }
